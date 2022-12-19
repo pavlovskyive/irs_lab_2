@@ -7,17 +7,33 @@ extension_server.py
 """
 
 
-def main():
+def is_stopword(word, stopwords):
     """
-    You should write your code for this program in this function.
-    Make sure to delete the 'pass' line before starting to write
-    your own code. You should also delete this comment and replace
-    it with a better, more descriptive one.
+    This function is passed:
+        word: a string containing a word token
+
+    The function returns a True value if given word is indeed a stopword, or False, if given word
+    is not a stopword.
+
+    >>> is_stopword('a', ['a', 'and'])
+    True
+    >>> is_stopword('nice', ['a', 'and'])
+    False
     """
-    pass
+
+    return word in stopwords
 
 
-# This provided line is required at the end of a Python file
-# to call the main() function.
-if __name__ == '__main__':
-    main()
+def stem_word(word):
+    """
+    This function is passed:
+        word: a string containing a word token
+
+    The function returns stemmed version of giver word using Porter algorithm
+
+    >>> stem_word('consulting')
+    'consult'
+    """
+
+    from nltk.stem import PorterStemmer
+    return PorterStemmer().stem(word)

@@ -17,6 +17,8 @@ the TODO parts of this file to make it work.
 DIRECTORY = 'bbcnews'
 # perhaps you want to limit to only 10 responses per search..
 MAX_RESPONSES_PER_REQUEST = 10
+# stopwords file
+STOPWORDS_FILE = 'stopwords.txt'
 
 class SearchServer:
     def __init__(self):
@@ -25,12 +27,13 @@ class SearchServer:
         once when the server is first created.
         """
         self.html = open('extension_client.html').read()
+        self.stopwords = open(STOPWORDS_FILE).read().split()
 
         # index files in *DIRECTORY*
         files = textfiles_in_dir(DIRECTORY)
         index = {}          # index is empty to start
         file_titles = {}    # mapping of file names to article titles is empty to start
-        create_index(files, index, file_titles)
+        create_index(files, index, file_titles, stopwords=self.stopwords, use_stemming=True)
 
         self.index = index
         self.file_titles = file_titles
@@ -50,7 +53,7 @@ class SearchServer:
 
         # if the command is search, the client wants you to perform a search!
         if request.command == 'search':
-            files = search(self.index, request.params['query'])
+            files = search(self.index, request.params['query'], stopwords=self.stopwords, use_stemming=True)
             files = files[:MAX_RESPONSES_PER_REQUEST]
             titles = list(map(lambda filename: {'title': self.file_titles[filename]}, files))
             json_string = json.dumps(titles) 
