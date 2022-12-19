@@ -10,7 +10,7 @@ import sys
 import string
 
 
-def create_index(filenames, index, file_titles):
+def create_index(filenames, index, file_titles, stopwords=[], use_stemming=False):
     """
     This function is passed:
         filenames:      a list of file names (strings)
@@ -78,6 +78,13 @@ def create_index(filenames, index, file_titles):
         # removing empty elements from tokens
         while("" in tokens):
             tokens.remove("")
+        # removing stopwords from tokens
+        from extension import is_stopword
+        tokens = list(filter(lambda token: not is_stopword(token, stopwords=stopwords), tokens))
+        # stemming tokens if needed
+        if use_stemming:
+            from extension import stem_word
+            tokens = list(map(lambda token: stem_word(token), tokens))
         # assigning indices
         for token in tokens:
             if token not in index:
@@ -86,7 +93,7 @@ def create_index(filenames, index, file_titles):
                 index[token].append(filename)
 
 
-def search(index, query):
+def search(index, query, stopwords=[], use_stemming=False):
     """
     This function is passed:
         index:      a dictionary mapping from terms to file names (inverted index)
@@ -127,8 +134,15 @@ def search(index, query):
     with only command .split()
     """
 
-    # reading words from queary separated by empty spaces
+    # reading words from query separated by empty spaces
     tokens = query.split()
+    # removing stopwords from query
+    from extension import is_stopword
+    tokens = list(filter(lambda token: not is_stopword(token, stopwords), tokens))
+    # stemming tokens if needed
+    if use_stemming:
+        from extension import stem_word
+        tokens = list(map(lambda token: stem_word(token), tokens))
     # checking if all tokens are in index dict
     if not all(token in index for token in tokens): 
         return []
