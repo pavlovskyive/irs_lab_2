@@ -60,10 +60,30 @@ def create_index(filenames, index, file_titles):
     >>> file_titles
     {'test1.txt': 'File 1 Title'}
     """
-    pass
-    """
-    You implement this function.  Don't forget to remove the 'pass' statement above.
-    """
+
+    for filename in filenames:
+        # read contents of file
+        file = open(filename, encoding = 'utf-8')
+        read = file.read()
+        file.close()
+
+        # reading title from string
+        title = read.partition('\n')[0]
+        file_titles[filename] = title
+
+        # reading words from string separated by empty spaces
+        tokens = read.split()
+        # trimming words from punctuactions
+        tokens = list(map(lambda token: token.strip(string.punctuation).lower(), tokens))
+        # removing empty elements from tokens
+        while("" in tokens):
+            tokens.remove("")
+        # assigning indices
+        for token in tokens:
+            if token not in index:
+                index[token] = []
+            if filename not in index[token]:
+                index[token].append(filename)
 
 
 def search(index, query):
@@ -100,10 +120,27 @@ def search(index, query):
     >>> search(index, 'apple ball nope')
     []
     """
-    pass
+    
     """
-    You implement this function.  Don't forget to remove the 'pass' statement above.
+    As assignment states, we can consider query to allways be lowercased,
+    and to not contain any punctution, so I will simplify getting tokens
+    with only command .split()
     """
+
+    # reading words from queary separated by empty spaces
+    tokens = query.split()
+    # checking if all tokens are in index dict
+    if not all(token in index for token in tokens): 
+        return []
+    # getting first token for easier setup
+    first = tokens.pop(0)
+    # initializing resulting list
+    res = index[first]
+    # filtering results for next tokens using common(...) func
+    from common_elements import common
+    for token in tokens:
+        res = common(res, index[token])
+    return res
 
 
 ##### YOU SHOULD NOT NEED TO MODIFY ANY CODE BELOW THIS LINE (UNLESS YOU'RE ADDING EXTENSIONS) #####
