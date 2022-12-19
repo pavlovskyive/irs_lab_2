@@ -19,10 +19,10 @@ def common(list1, list2):
     >>> common(['a', 'a', 'b'], ['a', 'a', 'x'])
     ['a']
     """
-    pass
-    """
-    You implement this function.  Don't forget to remove the 'pass' statement above.
-    """
+    res = list(set(list1).intersection(list2))
+    res.sort()
+    return res
+    
 
 
 def main():
@@ -33,4 +33,6 @@ def main():
 
 
 if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
     main()
