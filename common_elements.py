@@ -19,18 +19,7 @@ def common(list1, list2):
     >>> common(['a', 'a', 'b'], ['a', 'a', 'x'])
     ['a']
     """
-    pass
-    """
-    You implement this function.  Don't forget to remove the 'pass' statement above.
-    """
-
-
-def main():
-    print(common(['a'], ['a']))                             # should print ['a']
-    print(common(['a', 'b', 'c'], ['x', 'a', 'z', 'c']))    # should print ['a', 'c']
-    print(common(['a', 'b', 'c'], ['x', 'y', 'z']))         # should print []
-    print(common(['a', 'a', 'b'], ['a', 'a', 'x']))         # should print ['a']
-
-
-if __name__ == '__main__':
-    main()
+    
+    res = list(set(list1).intersection(list2))
+    res.sort()
+    return res
